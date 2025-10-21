@@ -10,8 +10,10 @@ const
   MAX_TAREAS = 100;
 
 type
-  TEstado = (epPendiente, epCompleto);
-  TPrioridad = (epAlta, epMedia, epBaja);
+  TEstado = (Pendiente, Completo);
+  TPrioridad = (Alta, Media, Baja);
+  {TEstado = (epPendiente, epCompleto);
+  TPrioridad = (epAlta, epMedia, epBaja);}
 
   TRegistroTarea = record
     ID: Integer;
@@ -72,12 +74,14 @@ begin
 
     if Entrada = 'pendiente' then
     begin
-      Result := epPendiente;
+      //Result := epPendiente;
+      Result := Pendiente;
       Break;
     end
     else if Entrada = 'completo' then
     begin
-      Result := epCompleto;
+      //Result := epCompleto;
+      Result := Completo;
       Break;
     end
     else
@@ -96,17 +100,20 @@ begin
 
     if Entrada = 'alta' then
     begin
-      Result := epAlta;
+      //Result := epAlta;
+      Result := Alta;
       Break;
     end
     else if Entrada = 'media' then
     begin
-      Result := epMedia;
+      //Result := epMedia;
+      Result := Media;
       Break;
     end
     else if Entrada = 'baja' then
     begin
-      Result := epBaja;
+      //Result := epBaja;
+      Result := Baja;
       Break;
     end
     else
@@ -136,16 +143,16 @@ begin
   Writeln('Tarea registrada exitosamente. ID: ', TotalTareas);
 end;
 
-procedure MostrarListaTareas(Tareas: array of TRegistroTarea; cant: integer);
+procedure MostrarListaTareas(Tareas: array of TRegistroTarea; TotalTareas: integer);
 var i:integer;
 begin
   //i:= 0;
-  if cant= 0 then
+  if TotalTareas = 0 then
   begin
     writeln('No hay tareas registradas.');
     exit;
   end; // verificar que haya tareas registras para mostrar
-  for i :=1 to cant do
+  for i :=0 to TotalTareas do
       // corchetes ASCII: 'Alt+91', 'Alt+93'
   begin
     writeln('--- Tarea ', Tareas[i].ID,' ---');
@@ -154,10 +161,15 @@ begin
     writeln('Valor: $', Tareas[i].Monto);
     writeln('Estado: ', Tareas[i].Estado);
     writeln('Prioridad: ', Tareas[i].Prioridad);
+    writeln('');
   end;
+  { No esta mostrando todas las tareas, solo muestra las ultimas 3
+  y la tarea '0', la cual no tiene registros, salvo que muestra por pantalla
+  Estado: Pendiente y Prioridad: Alta
+  }
 end;
 
-procedure BuscarTareasClientes(Tareas: array of TRegistroTarea);
+procedure BuscarTareasClientes(Tareas: array of TRegistroTarea; TotalTareas: integer);
 var
   clienteBuscado: string;
   i: integer;
@@ -170,7 +182,8 @@ begin
     begin
       if Tareas[i].Cliente = clienteBuscado then
       begin
-           writeln('Busqueda exitosa !!');
+           //writeln('Busqueda exitosa !!');
+           writeln('');
            writeln('--- Tarea ', Tareas[i].ID,' ---');
            writeln('Cliente: ', Tareas[i].Cliente);
            writeln('Tipo de trabajo: ', Tareas[i].TipoTrabajo);
@@ -192,7 +205,9 @@ begin
     ClrScr;
     Writeln('=== ORGANIZADOR DE TAREAS ===');
     Writeln('1. Ingresar nueva tarea');
-    Writeln('2. Salir');
+    writeln('2. Mostrar lista de tareas');
+    writeln('3. Buscar tareas por cliente');
+    Writeln('9. Salir');
     Writeln;
     Write('Seleccione opcion: ');
 
@@ -201,18 +216,20 @@ begin
 
     case Opcion of
       '1': IngresarTarea;
-      '2': Exit;
+      '2': MostrarListaTareas(Tareas, TotalTareas);
+      '3': BuscarTareasClientes(Tareas, TotalTareas);
+      '9': Exit;
     else
       Writeln('Opcion no valida.');
     end;
 
-    if Opcion <> '2' then
+    if Opcion <> '9' then
     begin
       Writeln;
       Write('Presione cualquier tecla para continuar...');
       ReadKey;
     end;
-  until Opcion = '2';
+  until Opcion = '9';
 end;
 
 // Programa principal !!
